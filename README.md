@@ -28,11 +28,11 @@ main.js
 ```javascript
 options: {
   title: ['滑块1','滑块2','滑块3'],
-  subTitle: ['我是滑块1', '我是滑块2', '我是滑块3'],
+  subTitle: ['我是滑块1', '我是滑块2', '我是滑块3'],      // 不写默认没有副标题
   //delTitle: '删除',
   img: true,
   imgUrl: ['https://ss1.baidu.com/6ONXsjip0QIZ8tyhnq/it/u=703993660,718082542&fm=58', ...],
-  length: 3
+  length: 3  // 不写默认为1
 }
 ```
 
