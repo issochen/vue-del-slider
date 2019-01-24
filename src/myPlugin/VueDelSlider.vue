@@ -3,7 +3,7 @@
     <section
       class="slider-item"
       ref="slider-item"
-      v-for="(item, index) of options.length"
+      v-for="(item, index) of length"
       :key="index"
       :data-key="index"
       @touchstart="touchStart"  
@@ -16,12 +16,12 @@
       </div>
       <div
         class="item-con"
-        :class="{'item-one-con': !(options.title[index] && options.subTitle[index])}"
+        :class="{'item-one-con': !(options.title[index] && subTitle[index])}"
       >
         <p class="item-title" v-if='options.title[index]'>
           {{options.title[index]}}
         </p>
-        <p class="item-desc" v-if='options.subTitle[index]'>{{options.subTitle[index]}}</p>
+        <p class="item-desc" v-if='subTitle[index]'>{{subTitle[index]}}</p>
       </div>
       <slot name="icon"></slot>
       <section class="delete" ref="delete">{{options.delTitle || '删除'}}</section>
@@ -42,6 +42,22 @@ export default {
   props: {
     options: { type: Object }
   },
+  computed: {
+    length () {
+      if (!this.options.length) {
+        return 1
+      } else {
+        return this.options.length
+      }
+    },
+    subTitle () {
+      if (!this.options.subTitle) {
+        return []
+      } else {
+        return this.options.subTitle
+      }
+    }
+  },
   data () {
     return {
       ele: null,  // 所有滑动元素数组
@@ -57,7 +73,7 @@ export default {
   },
   mounted () {   //初始化 滑块的 data值
     // this.deviceW = document.documentElement.clientWidth   // 屏幕宽度
-    for(let i = 0; i < this.options.length; i++ ) {
+    for(let i = 0; i < this.length; i++ ) {
       this.flag.push(0)
       this.tag.push(0)
     }
