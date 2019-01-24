@@ -18,10 +18,10 @@
         class="item-con"
         :class="{'item-one-con': !(options.title[index] && subTitle[index])}"
       >
-        <p class="item-title" v-if='options.title[index]'>
+        <div class="item-title" v-if='options.title[index]'>
           {{options.title[index]}}
-        </p>
-        <p class="item-desc" v-if='subTitle[index]'>{{subTitle[index]}}</p>
+        </div>
+        <div class="item-desc" v-if='subTitle[index]'>{{subTitle[index]}}</div>
       </div>
       <slot name="icon"></slot>
       <section class="delete" ref="delete">{{options.delTitle || '删除'}}</section>
@@ -72,6 +72,7 @@ export default {
     }
   },
   mounted () {   //初始化 滑块的 data值
+    this.rem()
     // this.deviceW = document.documentElement.clientWidth   // 屏幕宽度
     for(let i = 0; i < this.length; i++ ) {
       this.flag.push(0)
@@ -81,6 +82,43 @@ export default {
     this.delEleW = this.$refs['delete'][0].clientWidth    // 删除元素的宽度
   },
   methods: {
+    rem () {
+      ! function(e) {
+        function t(a) {
+            if (i[a]) return i[a].exports;
+            var n = i[a] = {
+                exports: {},
+                id: a,
+                loaded: !1
+            };
+            return e[a].call(n.exports, n, n.exports, t), n.loaded = !0, n.exports
+        }
+        var i = {};
+        return t.m = e, t.c = i, t.p = "", t(0)
+      }([function(e, t) {
+        "use strict";
+        Object.defineProperty(t, "__esModule", {
+            value: !0
+        });
+        var i = window;
+        t["default"] = i.flex = function(e, t) {
+            var a = e || 100,
+                n = t || 1,
+                r = i.document,
+                o = navigator.userAgent,
+                d = o.match(/Android[\S\s]+AppleWebkit\/(\d{3})/i),
+                l = o.match(/U3\/((\d+|\.){5,})/i),
+                c = l && parseInt(l[1].split(".").join(""), 10) >= 80,
+                p = navigator.appVersion.match(/(iphone|ipad|ipod)/gi),
+                s = i.devicePixelRatio || 1;
+            p || d && d[1] > 534 || c || (s = 1);
+            var u = 1 / s,
+                m = r.querySelector('meta[name="viewport"]');
+            m || (m = r.createElement("meta"), m.setAttribute("name", "viewport"), r.head.appendChild(m)), m.setAttribute("content", "width=device-width,user-scalable=no,initial-scale=" + u + ",maximum-scale=" + u + ",minimum-scale=" + u), r.documentElement.style.fontSize = a / 2 * s * n + "px"
+        }, e.exports = t["default"]
+      }]);
+      flex(100, 1);
+    },
     clicks (e,index) {
       const ele = e.srcElement || e.target
       if(ele.className.indexOf('delete') !== -1) {
@@ -132,19 +170,20 @@ export default {
       }
     },
     touchEnd (e) {
-      if (this.moveX < 10) return   // 不滑动 则不继续操作
+      if (Math.abs(this.moveX) < 10) return   // 不滑动 则不继续操作
       //判断在那位置停止的
       // 初始状态往左滑 之后手指 停止的时候状态
+      
       if (this.direction[this.i] && this.flag[this.i] === 0 ) {
         let x = Math.abs(this.moveX - this.startX)
-        if (x > this.delEleW* .5) {// 滑动超过一半
+        if (x < this.delEleW* .5) { // 滑动没超过一半 
+          this.ele[this.i].style.transition = 'all .5s'
+          this.ele[this.i].style.transform = `translateX(0rem)`
+        } else {  // 滑动超过一半
           let distance = this.delEleW / 100
           this.ele[this.i].style.transition = 'all .5s'
           this.ele[this.i].style.transform = `translateX(-${distance}rem)`
           this.flag[this.i] = 1   //改变滑块状态
-        } else {  // 滑动没超过一半
-          this.ele[this.i].style.transition = 'all .5s'
-          this.ele[this.i].style.transform = `translateX(0rem)`
         }
       }
       // 最终状态往右滑 之后 手指停止的时候状态
@@ -198,7 +237,7 @@ export default {
   .slider-item > .item-one-con {
     line-height: 1rem;
   }
-  .slider-item > .item-con > p{
+  .slider-item > .item-con > div{
     overflow: hidden;
     width: 100%;
     text-overflow: ellipsis;
@@ -231,5 +270,7 @@ export default {
     background: #d15454;
   }
 </style>
+
+
 
 
